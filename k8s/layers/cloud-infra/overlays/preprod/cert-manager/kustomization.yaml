@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/cert-manager
+  - step-cluster-issuer.yaml
+  - step-provisioner-password.yaml
+  - step-root-ca-pem-cert-manager.yaml
+  - cloudflare-token.yaml
+
+labels:
+  - pairs:
+      env: preprod
+    includeSelectors: true

@@ -1,0 +1,25 @@
+apiVersion: certmanager.step.sm/v1beta1
+kind: StepClusterIssuer
+metadata:
+    name: step-cluster-issuer
+    namespace: cert-manager
+spec:
+    url: ENC[AES256_GCM,data:LMz78U13KuLLEQt1qsbLH4gzEaf9RDOP1LCbYDe85GC+5J8ShShR2NHrk6RpuywLtELhCe7X,iv:fcqRvDG95TQGS/4gjrEqDbampEFMgFVQ0n07BLSjQ6k=,tag:W5gHy8SFZNuCPb9GpBFdaA==,type:str]
+    caBundle: ENC[AES256_GCM,data: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,iv:EsbgL9bMlYJcGrtmmHRRZh4aLRQ62aMKRxTLmo3+6R4=,tag:0mg63el8gOrHlp3OcTpmFg==,type:str]
+    provisioner:
+        name: ENC[AES256_GCM,data:Gkbvt+1AKZVG,iv:o9IpvuwbG/lICJKXulfgYWAnFbLul8G03DkYQO0aUgU=,tag:jt1nassF2p9IK04dwGY2aw==,type:str]
+        kid: ENC[AES256_GCM,data:Rywu6Ao0sy8H4BZJ/LVGE6yaRyf6z+hiEGgbUisIkIw1A0fRKeZbAM5RdA==,iv:XTM/1WumILFDT+r2GCzYnARU5y1LvfF1SiBZWIAunNI=,tag:w4UCP9MGz/W8pz9e63ovfA==,type:str]
+        passwordRef:
+            name: ENC[AES256_GCM,data:EQrDjzGuD6AsCX95RZKqCmOiXg0iLa5C+g==,iv:gI4Kmm7qNG3WB8q5Dsi8QZxgcxxf0G/V/LaWGosXzIE=,tag:ur/cLaDY/fF+UQuZvSbkJw==,type:str]
+            namespace: ENC[AES256_GCM,data:b0GbUARCkAOs3/YL,iv:1c86cn0ArPRwglD9e/4Z48Yy/PeVbxPSlbhjKA/TcMc=,tag:SwJcOcVC00tymvfXtBqFOw==,type:str]
+            key: ENC[AES256_GCM,data:ER/UTIuGb34=,iv:cJhj3adhPHjLc7GL+qQyYG8g2zAAjfvcnX1tcNjdDr8=,tag:AZ65/qEE154B1nOU4HfzYg==,type:str]
+sops:
+    kms:
+        - arn: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+          created_at: "2025-08-11T20:08:18Z"
+          enc: AQICAHjRcKNsvMMo3eengKwHXr11uHUOJURd2hmGOYkhaWgSygG+hMJHuC9v/O2Ezcipw/5SAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM3dw8dTwpFRrXAAvhAgEQgDtTSI1111F6uOtmKUf1kAQfdxjitItPeaGo6inklY2iMeDxe6joBtUhV0xT/q5oD9VBe1YJD0pO+q0kBw==
+          aws_profile: ""
+    lastmodified: "2025-08-11T20:08:18Z"
+    mac: ENC[AES256_GCM,data:by+FDuSIIG4z52khCMLS/vpcrABof+XqT0/qiyFqR2zgN/Q/4C+SEXrrB8y899fWqFzAj3EekliucGQNE5GXT3DnhEqjEQTLmfH1wi9ID8rEONq2q+HUx0GXu32WEf782U+HxGxzUX5gAJNgH897/fxhA+BRx6Uoa/HMoi2CttU=,iv:obMfQMwMkQOzn7QFKSavU4jdmA7pvF7n/JMLD0AABkI=,tag:FmSB0RGgt7rg7lsx6wfP7A==,type:str]
+    unencrypted_regex: ^(apiVersion|metadata|kind|type)$
+    version: 3.10.2

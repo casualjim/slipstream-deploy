@@ -1,0 +1,133 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/platform
+  - certificate.yaml
+  - nats-resolver-auth.yaml
+  - ../../../base/wasmcloud-operator
+  - wasmcloud-hostconfig.yaml
+
+generators:
+  - secrets-generator.yaml
+
+labels:
+  - pairs:
+      env: preprod
+
+helmCharts:
+  - name: nats
+    repo: https://nats-io.github.io/k8s/helm/charts/
+    releaseName: nats
+    version: 1.3.10
+    namespace: platform
+    skipTests: true
+    valuesInline:
+      tlsCA:
+        enabled: true
+        secretName: step-root-ca-pem
+        dir: /etc/nats-ca-cert
+        key: ca.pem
+      natsBox:
+        enabled: true
+        defaultContextName: default
+        contexts:
+          default:
+            creds:
+              secretName: nats-host-creds
+            merge:
+              nats:
+                servers:
+                  - tls://nats.platform.svc:4222
+              tls:
+                ca: /etc/nats-ca-cert/ca.pem
+
+      namespaceOverride: platform
+      config:
+        cluster:
+          name: slipstream-preprod
+          enabled: true
+          replicas: 3
+          tls:
+            enabled: true
+            secretName: nats-tls
+        jetstream:
+          enabled: true
+          fileStore:
+            enabled: true
+            pvc:
+              enabled: true
+              size: 10Gi
+        nats:
+          tls:
+            enabled: true
+            secretName: nats-tls
+        leafnodes:
+          enabled: true
+          tls:
+            enabled: true
+            secretName: nats-tls
+          merge:
+            remotes:
+            - urls: ["nats-leaf://connect.ngs.global:7422"]
+              account: AAD6CTSRRVBCTTI6BMSMKQFVRBVPFUYNF5AYEZHLD6E64P2RL6ATXKIR
+              credentials: /etc/nats-creds/leafnode/nats.creds
+              tls:
+                ca_file: /etc/ssl/cert.pem
+                verify: true
+        websocket:
+          enabled: true
+          tls:
+            enabled: true
+            secretName: nats-tls
+            merge:
+              ca_file: /etc/nats-ca-cert/ca.pem
+              verify: true
+          ingress:
+            enabled: true
+            hosts:
+              - nats-ws.preprod.knub.ai
+            className: nginx
+            tlsSecretName: nats-public-tls
+            merge:
+              metadata:
+                annotations:
+                  cert-manager.io/cluster-issuer: letsencrypt-dns01
+                  nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+                  nginx.ingress.kubernetes.io/proxy-ssl-secret: ingress/ingress-upstream-client
+                  nginx.ingress.kubernetes.io/proxy-ssl-verify: "on"
+                  nginx.ingress.kubernetes.io/proxy-ssl-verify-depth: "2"
+                  nginx.ingress.kubernetes.io/proxy-ssl-trusted-ca: ingress/step-root-ca-pem
+                  nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
+                  nginx.ingress.kubernetes.io/proxy-ssl-name: nats.platform.svc.cluster.local
+        mqtt:
+          enabled: true
+          tls:
+            enabled: true
+            secretName: nats-tls
+            merge:
+              ca_file: /etc/nats-ca-cert/ca.pem
+              verify: true
+        gateway:
+          enabled: false
+          tls:
+            enabled: true
+            secretName: nats-tls
+            merge:
+              ca_file: /etc/nats-ca-cert/ca.pem
+              verify: true
+        resolver:
+          enabled: true
+          pvc:
+            enabled: true
+            size: 10Gi
+          merge:
+            type: full
+            interval: 2m
+            timeout: 2s
+        merge:
+          operator: |
+            eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJSNkE2RzNBWU03TFhEWUdKV0hISjJNT041NVlESDdKRUpMRkdNVVFETjNOVVNCUk81RkhRIiwiaWF0IjoxNzU1MDIyNTYyLCJpc3MiOiJPQTRXVUkzQ09VNjNaVExVWE9BS1JVV1NKREU2RFRRRU5NN1ZFWU9DQjJQVFlOTTJaUkU2R0I3NiIsIm5hbWUiOiJzbGlwc3RyZWFtLWRldiIsInN1YiI6Ik9BNFdVSTNDT1U2M1pUTFVYT0FLUlVXU0pERTZEVFFFTk03VkVZT0NCMlBUWU5NMlpSRTZHQjc2IiwibmF0cyI6eyJvcGVyYXRvcl9zZXJ2aWNlX3VybHMiOlsibmF0czovL2xvY2FsaG9zdDo0MjIyIl0sInN5c3RlbV9hY2NvdW50IjoiQUREVzJYMzY2VkZOTzJMRjJYWkZFNURNSUlLQ0xUNktMN0dPRFE2TTRVWEkyMkU0VjRSWFpBQlEiLCJ0eXBlIjoib3BlcmF0b3IiLCJ2ZXJzaW9uIjoyfX0.s5zR3rULawczDTbwYDbSdXGSgEH9pTMOKC4oelqDLxD0V1PcndjkTTS_xoGsK8WUFamZ9wCpQF8KjCf-UxHOBw
+          system_account: ADDW2X366VFNO2LF2XZFE5DMIIKCLT6KL7GODQ6M4UXI22E4V4RXZABQ
+          resolver_preload:
+            ADDW2X366VFNO2LF2XZFE5DMIIKCLT6KL7GODQ6M4UXI22E4V4RXZABQ: |-
+              eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJES0g2UUU2NE9KMlgzSE5BUEhFU1U2M0JJNUZLSlZJVk1HVkFBTkw3S0tYTTVZWFJXWk9RIiwiaWF0IjoxNzU1MDIyNTYyLCJpc3MiOiJPQTRXVUkzQ09VNjNaVExVWE9BS1JVV1NKREU2RFRRRU5NN1ZFWU9DQjJQVFlOTTJaUkU2R0I3NiIsIm5hbWUiOiJTWVMiLCJzdWIiOiJBRERXMlgzNjZWRk5PMkxGMlhaRkU1RE1JSUtDTFQ2S0w3R09EUTZNNFVYSTIyRTRWNFJYWkFCUSIsIm5hdHMiOnsiZXhwb3J0cyI6W3sibmFtZSI6ImFjY291bnQtbW9uaXRvcmluZy1zdHJlYW1zIiwic3ViamVjdCI6IiRTWVMuQUNDT1VOVC4qLlx1MDAzZSIsInR5cGUiOiJzdHJlYW0iLCJhY2NvdW50X3Rva2VuX3Bvc2l0aW9uIjozLCJkZXNjcmlwdGlvbiI6IkFjY291bnQgc3BlY2lmaWMgbW9uaXRvcmluZyBzdHJlYW0iLCJpbmZvX3VybCI6Imh0dHBzOi8vZG9jcy5uYXRzLmlvL25hdHMtc2VydmVyL2NvbmZpZ3VyYXRpb24vc3lzX2FjY291bnRzIn0seyJuYW1lIjoiYWNjb3VudC1tb25pdG9yaW5nLXNlcnZpY2VzIiwic3ViamVjdCI6IiRTWVMuUkVRLkFDQ09VTlQuKi4qIiwidHlwZSI6InNlcnZpY2UiLCJyZXNwb25zZV90eXBlIjoiU3RyZWFtIiwiYWNjb3VudF90b2tlbl9wb3NpdGlvbiI6NCwiZGVzY3JpcHRpb24iOiJSZXF1ZXN0IGFjY291bnQgc3BlY2lmaWMgbW9uaXRvcmluZyBzZXJ2aWNlcyBmb3I6IFNVQlNaLCBDT05OWiwgTEVBRlosIEpTWiBhbmQgSU5GTyIsImluZm9fdXJsIjoiaHR0cHM6Ly9kb2NzLm5hdHMuaW8vbmF0cy1zZXJ2ZXIvY29uZmlndXJhdGlvbi9zeXNfYWNjb3VudHMifV0sImxpbWl0cyI6eyJzdWJzIjotMSwiZGF0YSI6LTEsInBheWxvYWQiOi0xLCJpbXBvcnRzIjotMSwiZXhwb3J0cyI6LTEsIndpbGRjYXJkcyI6dHJ1ZSwiY29ubiI6LTEsImxlYWYiOi0xfSwic2lnbmluZ19rZXlzIjpbIkFCQllRRE02S1VISkY1NFQ3N0FPQ0pXM0lDVUo1SlFaSjNSWU9GUFRQTlM3QjZTTktIMjI1MjJQIl0sImRlZmF1bHRfcGVybWlzc2lvbnMiOnsicHViIjp7fSwic3ViIjp7fX0sImF1dGhvcml6YXRpb24iOnt9LCJ0eXBlIjoiYWNjb3VudCIsInZlcnNpb24iOjJ9fQ.Res5jjlqWfqyw6iy2bH1-Hhr_mDoNSqSqpbqzDTWNOgMfzO_hl9Kwb1lXivaynbyQN1Lt2VNpzRyFPv-5iQPBQ

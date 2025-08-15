@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+#MISE description="Preview the Kubernetes resources that will be applied, with server side dry run"
+
+#USAGE flag "--environment <environment>" help="Deployment environment" {
+#USAGE   choices "dev" "preprod" "prod"
+#USAGE }
+
+#USAGE flag "--provider <provider>" help="Cloud provider (required: vultr or ovh)" {
+#USAGE   choices "vultr" "ovh"
+#USAGE }
+
+#USAGE flag "--context <kubectl_context>" help="kubectl context to use (overrides current context)" {
+#USAGE }
+
+if [ -z "${usage_provider:-}" ]; then
+  echo "Provider is required"
+  exit 1
+fi
+if [ -z "${usage_environment:-}" ]; then
+  echo "Environment is required"
+  exit 1
+fi
+
+if [ -n "${usage_context:-}" ]; then
+  exec mise deploy:preview --provider "$usage_provider" --environment "$usage_environment" --context "$usage_context"
+else
+  exec mise deploy:preview --provider "$usage_provider" --environment "$usage_environment"
+fi

@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ingress-upstream-client
+  namespace: ingress
+spec:
+  secretName: ingress-upstream-client
+  issuerRef:
+    name: step-cluster-issuer
+    kind: StepClusterIssuer
+    group: certmanager.step.sm
+  commonName: ingress-nginx.ingress.svc.cluster.local
+  privateKey:
+    algorithm: Ed25519
+  usages:
+    - client auth
+  duration: 720h
+  renewBefore: 240h

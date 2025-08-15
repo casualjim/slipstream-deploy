@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Cloud infra (vultr, dev)
+  - ../../../layers/cloud-infra/overlays/dev/cert-manager
+  - ../../../layers/cloud-infra/overlays/dev/ingress
+  - ../../../layers/cloud-infra/overlays/dev/observability
+  - ../../../layers/cloud-infra/overlays/dev/vultr
+
+  # Platform infra (dev)
+  - ../../../layers/platform-infra/overlays/dev/platform
+  - ../../../layers/platform-infra/overlays/dev/restate-dev
+  - ../../../layers/platform-infra/overlays/dev/restate-operator

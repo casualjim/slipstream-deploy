@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+#MISE description="Preview the Kubernetes resources that will be applied, with server side dry run"
+
+#USAGE flag "--environment <environment>" help="Deployment environment" {
+#USAGE   choices "dev" "preprod" "prod"
+#USAGE }
+#USAGE flag "--provider <provider>" help="Cloud provider (required: vultr or ovh)" {
+#USAGE   choices "vultr" "ovh"
+#USAGE }
+#USAGE flag "--context <kubectl_context>" help="kubectl context to use (overrides current context)" {
+#USAGE }
+
+# shellcheck source=_common.sh
+source "$(dirname "$0")/_common.sh"
+parse_deploy_args "$@"
+ensure_ksops_plugin
+
+run_kustomize_build "${usage_environment:?}" | kubectl_apply --dry-run=server --selector env="$usage_environment" || {
+  echo "Preview failed. Please check the output for errors."
+  exit 1
+}

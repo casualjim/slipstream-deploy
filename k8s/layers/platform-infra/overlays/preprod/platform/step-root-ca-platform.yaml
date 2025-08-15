@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: step-root-ca-pem
+    namespace: platform
+stringData:
+    ca.pem: ENC[AES256_GCM,data:eBLz2HPpqdHqhoD/WjpBupOJPyV01TnZnhHkf6t+9cevIqr1w8M3FB956A7hmtY0vFIt2q0BpZnweQZI+21nsMIVXdCC2l6cDJT4bmYgFI5DTS3SDYalcYenUCjdpfR/QLRdmtEkCF9Oey3yg3uZkwS1CVXrDT4H/nMyn1r/9hoM/6mmtrFLa2/nUyqzUYuV+74z0JBi0+ScY68VFE8SR5lXSinqmWpRnwjuTQhkstvpBneI5Boy4bU6E5ODS+nGgaowpsq2jxQ1xIgbYQe7cdbeeIWNKOntIhqiZVvvaJCKRaU3YWzgs69hcYEDmECNIHZqxQXA9q1P8rw68tbHsGqa291WgHGP1usGyzbj4Cc4LlKrjqET9wfScOZ/n+jXboT3Ne/oGAozO7zi87pWlHa2lYN8AFt4m8oiLtVCq97GfqCKvXA6FecjBHF4KRaTnZw/+uQO47ZhTu+DS3WgJGQvdW5VD71+n4vuqztXpzYCwCftBhaH4A0uIka71NHFpnKN5jkBxLEKoXbZeol1JTL9WknMbRwnuL3ZfExpIAGPoeONjipQm4hHJbPXLuazQiT1M5hg0Y4DyuocbiogYN8VWedOPizO+hppCHyzdJa+FBLwFBnr323WpWMAgunyfgFNpY00LU6K9iwgrckhKLbesXg3QLT1RDhI0P6f+6Q/a7ZlE2ibL3Eb41cIzaAYCq3+BDyMFy9j5msTqbbqusPmxvWaeqm4Op7G2bLo2KCBCIy8dhR8BQe/H/LLmjTI1mZsr9fAprZzmuhjUs8XyjRsJt4N20FGObOeH4KDzEfcVxIe9+vRAV8tTTx+EI3qSGd83HJ3Yk8ELQQWUQgN/KF4jKR8YJVTu3edb2eNyLhabi+H517vP9yfKsBYySgxdVkJUtyDrE1B1jb6L0oNiGfP4pHAykAWo6WfYVJFd6akqba7w8953QTlFKaURZWIa7FjAU3jpEKKkelT2+D/l78E7KbZcmswAUj5clFIdJ5OJ4hzXayhnSMVamBUcUpb4BufUSgMZKy9XDQTq4JYmK+ICWfr1l8ITi+KT3THTIcDPpz+HXTCaMLDzWcVKWATZUf4l87Hv4h2Bb1/Hq89Jn6BuhBVCJemkV26aa5rehEp+LCIqAnTlVn2sUPjchICXTx1PMGJd6s3saaaZyCNsRRdeAyZefrnFmydQF/EnXXWEJJvk4sjQqPwW2etY+peypl4dn5Z/7pI69yL/TrxYdkA6I4T5mF1DAp7Le1Ane9QDOrBXQXjK8vtCi5CdIoutw8pQdGRuP9PXaN3tBk2tB6p9keuY6qat9ELnq7ODbiUd3AWO0j9BFPFxq7Zd51EkxWbkHNpKV1z5RnIXAPaDAT1Zq0/DdIqN+kWG63q7cR9QUadPG/h+hWF+htaKMU1Ft2DcJr09WLVi2LHXnp4EbjqOaMfDs8AWNmsvnKKP8sJDWBpK7ONH7ib48FGvZsGmM31VJHRxAaUUr6iVB//sAhrpRSVEK5W5aLqwewLo5wZARNDgluGQs96zOZJL1wRgtK4gh/6ra6b4EBvMd+zktHzgjCrR+4nk0BmutC3sDBjYI8fdhrM7oSXUeuAwfIbZsd0iLkB4gh4G5Wcr9bZCUNos66HgvGOORKJkWzveWnc2g==,iv:pQ2lJheuo+3zfSeBvr+60bSjUl+Zalt/pWVitTLYmVI=,tag:diWUd4vxWiKwrscZ6ewsyw==,type:str]
+sops:
+    kms:
+        - arn: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+          created_at: "2025-08-12T20:28:10Z"
+          enc: AQICAHjRcKNsvMMo3eengKwHXr11uHUOJURd2hmGOYkhaWgSygEEKQkTYcuuIkxMCzYwWhviAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMoAOiz+KwSpbQtewAAgEQgDvzqGrMmI/DLXiIR+Bb2JiU4JQvZKTFW0f587YL+TpmgwN5RbTgb/ojQJOh5RUbZ+d/XL84j/habHbfuQ==
+          aws_profile: ""
+    lastmodified: "2025-08-12T20:28:10Z"
+    mac: ENC[AES256_GCM,data:w0OpI41eR3JfXFP/BytBP5aiKgEGvfk8KIOlAHbILzNNkWeSQNFxmDEDLMnpT8fKBCLMr1f9FeNM8J2i1KO84LcVIFXzCnypeDVcuBPfL9ZmcT9Rdl9XZ+5wafBgOOz+uTTPU7JJTxEznytI8no36BXxTD2i8+DZnbmIUC/H96w=,iv:Dq9vCUrMltq8SyrODDlWkOagxQeEOQr0z53aB2X5NDA=,tag:8IflUoo5sjNy8WN845zaAw==,type:str]
+    unencrypted_regex: ^(apiVersion|metadata|kind|type)$
+    version: 3.10.2

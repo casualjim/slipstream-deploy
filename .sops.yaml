@@ -1,0 +1,34 @@
+creation_rules:
+  - path_regex: 'tofu/infra/secrets/.*.yaml'
+    yaml_sort_keys: true
+    kms: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+
+  # Cloud-infra: cert-manager overlay secrets and issuer
+  - path_regex: 'k8s/layers/cloud-infra/overlays/.*/cert-manager/(?:cloudflare-token|step-root-ca-pem-cert-manager|step-provisioner-password|step-cluster-issuer)\.yaml'
+    unencrypted_regex: "^(apiVersion|metadata|kind|type)$"
+    kms: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+
+  # Cloud-infra: ingress overlay secrets
+  - path_regex: 'k8s/layers/cloud-infra/overlays/.*/ingress/(?:cloudflare-token-ingress|step-root-ca-pem-ingress)\.yaml'
+    unencrypted_regex: "^(apiVersion|metadata|kind|type)$"
+    kms: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+
+  # Cloud-infra: observability API key
+  - path_regex: 'k8s/layers/cloud-infra/overlays/.*/observability/signoz-api-key\.yaml'
+    unencrypted_regex: "^(apiVersion|metadata|kind|type)$"
+    kms: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+
+  # Cloud-infra: Vultr CCM secret (base)
+  - path_regex: 'k8s/layers/cloud-infra/base/vultr/secret\.yaml'
+    unencrypted_regex: "^(apiVersion|metadata|kind|type)$"
+    kms: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+
+  # Platform: NATS secrets and resolver config
+  - path_regex: 'k8s/layers/platform-infra/overlays/.*/platform/(?:nats-\w+-creds|step-root-ca-platform)\.yaml'
+    unencrypted_regex: "^(apiVersion|metadata|kind|type)$"
+    kms: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+
+  # Platform: Restate secrets and configs (per env namespace)
+  - path_regex: 'k8s/layers/platform-infra/overlays/.*/restate-(?:dev|preprod)/(?:signing-key|restate-signing-key|cluster)\.yaml'
+    unencrypted_regex: "^(apiVersion|metadata|kind|type)$"
+    kms: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8

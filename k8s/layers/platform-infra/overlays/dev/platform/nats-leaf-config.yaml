@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wasmcloud-host
+  namespace: platform
+data:
+  nats.conf: |
+    jetstream {
+      domain: default
+    }
+    leafnodes {
+      remotes: [
+        {
+          url: "nats://nats.platform.svc.cluster.local:7422"
+          credentials: "/nats/nats.creds"
+          tls: {
+            ca_file: "/etc/ssl/platform-ca/ca.pem"
+            insecure: false
+            verify: true
+          }
+        }
+      ]
+    }

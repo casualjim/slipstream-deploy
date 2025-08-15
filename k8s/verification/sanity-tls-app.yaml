@@ -1,0 +1,116 @@
+# Internal TLS (server-only) + public TLS at edge via cert-manager
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sanity-tls-internal
+  namespace: default
+spec:
+  secretName: sanity-tls-internal-tls
+  issuerRef:
+    name: step-cluster-issuer
+    kind: StepClusterIssuer
+    group: certmanager.step.sm
+  commonName: sanity-tls.default.svc.cluster.local
+  dnsNames:
+    - sanity-tls.default.svc
+    - sanity-tls.default.svc.cluster.local
+  duration: 720h
+  renewBefore: 240h
+  privateKey:
+    algorithm: Ed25519
+  usages:
+    - server auth
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sanity-tls
+  namespace: default
+  labels:
+    app: sanity-tls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sanity-tls
+  template:
+    metadata:
+      labels:
+        app: sanity-tls
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 8443
+          volumeMounts:
+            - name: tls
+              mountPath: /etc/nginx/tls
+              readOnly: true
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              cat <<EOF > /etc/nginx/conf.d/default.conf
+              server {
+                listen 8443 ssl;
+                server_name _;
+                ssl_certificate /etc/nginx/tls/tls.crt;
+                ssl_certificate_key /etc/nginx/tls/tls.key;
+                # No client auth; server-only TLS
+                location / {
+                  return 200 'Hello from sanity-tls with server-side TLS!';
+                }
+              }
+              EOF
+              exec nginx -g 'daemon off;'
+      volumes:
+        - name: tls
+          secret:
+            secretName: sanity-tls-internal-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sanity-tls
+  namespace: default
+  labels:
+    app: sanity-tls
+spec:
+  selector:
+    app: sanity-tls
+  ports:
+    - name: https
+      port: 443
+      targetPort: 8443
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sanity-tls
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "on"
+    nginx.ingress.kubernetes.io/proxy-ssl-verify-depth: "2"
+    nginx.ingress.kubernetes.io/proxy-ssl-trusted-ca: "ingress/ingress-upstream-root-ca"
+    nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
+    nginx.ingress.kubernetes.io/proxy-ssl-name: "sanity-tls.default.svc.cluster.local"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sanity-tls.dev.knub.ai
+      secretName: sanity-tls-public-tls
+  rules:
+    - host: sanity-tls.dev.knub.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sanity-tls
+                port:
+                  number: 443

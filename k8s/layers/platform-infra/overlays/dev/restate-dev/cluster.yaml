@@ -1,0 +1,69 @@
+apiVersion: restate.dev/v1
+kind: RestateCluster
+metadata:
+    name: restate-dev
+spec:
+    compute:
+        replicas: ENC[AES256_GCM,data:iQ==,iv:4WMJJiyfXvr18SV2AXUIZWEtcxRQKCjTgfv+vy7M2Dk=,tag:5Na9DDrATF1NccL/OcuWrw==,type:int]
+        image: ENC[AES256_GCM,data:DwjoRwOyPEZVWDzuC5JvSB4pvhu080x/dwSxWNiymdnT,iv:d53iZkPQxhIXnAJlxmDiFhQiT851yNEmN3hpmKQ5rcg=,tag:7ISCSj+jC+59tmrvsKdyVQ==,type:str]
+        env:
+            - name: ENC[AES256_GCM,data:SukrwNE0vA==,iv:iOzc2UmPaEyHXlvr3oa46A298vdUD46fsPDo0CAOdPY=,tag:4axiyBgQ6ryjK+KgL9LS+Q==,type:str]
+              valueFrom:
+                fieldRef:
+                    fieldPath: ENC[AES256_GCM,data:AxE5/ItsMAZ4USxwsw==,iv:D+T+6VIeHate8HJDO11GeYItNNYr87y6AsAgJ3mkO0w=,tag:53kAHfSz8xrqLA1JwwltDQ==,type:str]
+            - name: ENC[AES256_GCM,data:bs7Y0eFSdnmsSg==,iv:k58EYygeXDDyoY1GQqu0BdJaMDsdf5WfmH4U/ED90aE=,tag:tPZuLnEgMChJpMc0e+OUng==,type:str]
+              valueFrom:
+                fieldRef:
+                    apiVersion: v1
+                    fieldPath: ENC[AES256_GCM,data:j5Wc8334wn6V1BO+,iv:wEbntwqA//Z9RhvKad500du9/RVvutGsuWoFVemesPQ=,tag:oUPcQSusAoDGOsxRInMvUQ==,type:str]
+            - name: ENC[AES256_GCM,data:9nliCp4lYgkzWzM=,iv:beriMgh4thhbCIRM8XZSghp9xCrrllx6J/upTzjQP7c=,tag:Y+GyA5+ELWHccjJUmgabmw==,type:str]
+              valueFrom:
+                fieldRef:
+                    fieldPath: ENC[AES256_GCM,data:ke58wDP1Zkhp2gbY,iv:O/cJVfVvvhuft0G3pmp0CNTbINj4VpqG0n/joyaB4LE=,tag:wRgYyt5ZfZZPUOSpLWc4sg==,type:str]
+            - name: ENC[AES256_GCM,data:TG7q7gMm19rRiL0LZx7X5LsV0AqT8Aba8dxt,iv:1LPYyVe0eAvRLKO2o5KaGB0TME7nWYm+6vCa97M/SIk=,tag:mRHobKecL9+JviTCHU7xng==,type:str]
+              value: ENC[AES256_GCM,data:7F3VSw==,iv:9cZ3IymoVHVRSpwu3vPOMnr+X2Yb4ORe835AZc80i1I=,tag:IoXT3m0IrvyZq+rMe+7NQw==,type:str]
+            - name: ENC[AES256_GCM,data:cKKqPeq5kbROrMDuqtAdQEri/SvolkfxhXEe,iv:qN9y4W/qrSpxkIZbToMW8T1/TUBI1ZWQ/CDBUZMW/Dw=,tag:dtfU/PrD2Z4kt+ChlAJXxA==,type:str]
+              value: ENC[AES256_GCM,data:irkA/6VIinmRA1lh1BfJ,iv:K2qa/GeY5MrNqV1qTNvNaNN6TwBwjt0Oc0WvEC4ln1U=,tag:YrNApjRzSa6CIHm9qDgHUQ==,type:str]
+            - name: ENC[AES256_GCM,data:jUAvARnFOhLHmA7fgUO0sFP+/HEYTAUU,iv:gcs1Xl3VxyOgIvpM/5YVPja5MxkBVGVzR+r3kQHHUMg=,tag:6hRnUEBFOCJsRMfH/uogtQ==,type:str]
+              value: ENC[AES256_GCM,data:RYlB9WtqKT1oM/eGcwJa/6nrVGsXZc/WqhAbaaL0pj9wFrMZ+CDhVRXb9Qg/E9GYRaTbe9uzC09DO3TdoPhyMawTUgxTNMjeEf2hEg==,iv:0MK+Baa82Qai6Fp986aZNGWUOxK+hkQpvq9rO/7wRJY=,tag:MCb5T4lrpyhHFyWrCRrHwA==,type:str]
+            - name: ENC[AES256_GCM,data:LFb88fcBe/C+cZgAfKo3rMtOGA==,iv:kX94bmdj/gxJ72rcczSYiPS5lzmiIIdJ8tKcxs+NkPE=,tag:dwbtd1omv7lLOU9ofXiONw==,type:str]
+              value: ENC[AES256_GCM,data:MRuj95J4XjsNmVUnUc0gTZjoVODX,iv:iH3LOiaktteajNqBTpxUSDtQtMeYI2SS3+Rt42wS6G8=,tag:Sn7fNyg9Bu3qzBwAfjwERg==,type:str]
+        affinity:
+            podAntiAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                    - weight: ENC[AES256_GCM,data:Kf1M,iv:fxcCDUneDNdl1JpqbU3rpzWbNIyS74d4D907wGm8XK8=,tag:WWnlmjYGEwONkBs6HB7qLw==,type:int]
+                      podAffinityTerm:
+                        labelSelector:
+                            matchLabels:
+                                app.kubernetes.io/name: ENC[AES256_GCM,data:b4WRcaX5vw==,iv:hmnZYWjJwdoERJLQD8biurUvzX4ZtmRtd+h2tsPYUqA=,tag:pNvKsRnDuGC7Uj5k4dgQ9Q==,type:str]
+                                app.kubernetes.io/instance: ENC[AES256_GCM,data:W+BlPKh+aKuRssg=,iv:jYYRyQ48HQKO0PwMJJN8kW5AADRiCtg1GgybNwyCQz0=,tag:mfyA8Zp74Vc2BGHKc/83ng==,type:str]
+                        topologyKey: ENC[AES256_GCM,data:RGvW91uZDBxFSpED5Q9xAGJm/RcZww==,iv:8KNpCwgAqE9chUy8qEfbJIjcb9mND8RmrucHXeAtooQ=,tag:XQCrHn/fx8W+/M7FNnuU6g==,type:str]
+    storage:
+        storageRequestBytes: ENC[AES256_GCM,data:2sIt4RsGr3aBC6M=,iv:yrRt2yd8yZdZHkpIAJIZi85izozQuw7ZRSaCWKRBK6w=,tag:k46+cKbH5WKYUryBmfnxkg==,type:int]
+        storageClassName: ENC[AES256_GCM,data:YOSrPfHZoh84T3jFpgOPo3Eobk47RwsB,iv:mhLVX/YjHlxq1g55ynVuaheIaRUvnvK+aSGhrsJde3A=,tag:VfDkRfWwO1P2WSM6xxQo/A==,type:str]
+    security:
+        requestSigningPrivateKey:
+            version: ENC[AES256_GCM,data:w+g=,iv:yMUdk3tlDWmae3Btn4DYsOmzBQv8m4eZ5pYeqtKokLU=,tag:AxPojZT9o019P6gq1oclBw==,type:str]
+            secret:
+                secretName: ENC[AES256_GCM,data:RkfyO6Vx1nvCwRgITmnEY6C31g==,iv:XQMpxuwGHEiE1z2oEm+KMj0vDNbjD6DQ9ywtyENxGtQ=,tag:M4viFWNpONYxh4+PoqMthA==,type:str]
+                key: ENC[AES256_GCM,data:a/q06PN5FJ0WKdWdYhGskG2tDg==,iv:ScEFnqfACKHTCuTBlawWz2AqVFX/dpIGCUTg5WMzx28=,tag:zcdWP4k4T5gRTlrDWOBIww==,type:str]
+        networkPeers:
+            ingress:
+                - namespaceSelector:
+                    matchLabels:
+                        kubernetes.io/metadata.name: ENC[AES256_GCM,data:6KJwHOqLcQ==,iv:xqqyLdzhxZ2OKQUbrEpq8RYWM4EWCL8q8BDBvwstaMo=,tag:4EqW8FFgKOkTD1NcN+rjIw==,type:str]
+            metrics:
+                - namespaceSelector:
+                    matchLabels:
+                        kubernetes.io/metadata.name: ENC[AES256_GCM,data:aAo75AJ0womly1/Xkg==,iv:ba2zxuZjhFuEeGgDVuemyc/qI+Pke0IXxcvGazdMm4s=,tag:xBTryF+dZzFQ3O/TG1PGrw==,type:str]
+    config: ENC[AES256_GCM,data:jK2HSRK5UDP8/enPic5iqbk8XM7ONSIDoz5E/4Y39Y6q88q+FzbBj1bvm+n+IzAQNvGrLUmQhoCEImLp+m+qWiTPxPztEj+Poj+BdJabEC+66tURcE62dls+Rbkg9ekRB/OXZggWazAkG63jwD1MVHRNuSiEgfrv+4ZYYzlQost+CE3k0Ql2g4AbxY0bY1Y0Edz59qQ+OQMpO30xf8f6OliLlq+qJDP/mEdrAWvIIl1LNoWaE9k8K6g9bYKGYwdVjZZeph7JZVFLl8ELbvBFgjrMmrlH21F78Nviy28CVMTafV5mtvlj4hgW5VFpQZrk5E2tgwxyC/wztUZyFdSPKtiO97k1nMkDk4HVwyiTEstK8yYoLD8RbFmCoSmdnRYGxqJec/v5FbfruqeYPRJAh7ZZoC8btMxYI/ehkWrdC8wgjZg7HMUDpown/0bJ8L0ACgYU8yL8+AQbofddPENhR/Ao5g/5f9bNlSgSiXLm5cauOka0kYP81ztuup5pN3TuQH5H0fIkHxOhQbltPbs7PamW+xz1dvVdjsdk+Y/TnAZXGRqsxZJBvwZyf8FUTQFYF2GavHbRQnJ0MCUdUcTMR3X/XgyH7a/qi0hMrMcdI5cu+0p5PMTFjro=,iv:WhFjor9Ue5UUtZOQclW1McM0XOdxjBX/4QnUSTjsf3A=,tag:W6oinFh6TxnqVBVOuZ/41A==,type:str]
+sops:
+    kms:
+        - arn: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+          created_at: "2025-08-12T17:34:57Z"
+          enc: AQICAHjRcKNsvMMo3eengKwHXr11uHUOJURd2hmGOYkhaWgSygHLFxaPJoB6arFr5m5bWe4YAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMx1che5euzZk8Yt/GAgEQgDuefkYGcJxVzdCl5CDPIvi4+UdrtNLnCO0DAsa2mQ8jdTYonLmhf2HKrz6eOhBa2QL4JIZ0rNG6bXJmrw==
+          aws_profile: ""
+    lastmodified: "2025-08-12T17:34:57Z"
+    mac: ENC[AES256_GCM,data:07er1Q6+X4m/Ye2+o2myVhIYkZhZYSxkDVX8jHb/qGgY1emy/OyW0hoiDE8Ihtwryq9tcxc06uazgHgO9BFELQmKQQ//8Rg4wridYR/3FfjEyjuAksilTHOuKQRe4Qz9VeUqx6xvp74yYzD2gVTFeZOVZUWKfJrcY9EinuDwnbo=,iv:/LE1eXHulBmZE6uFDVxcRnjK4rONbboVG3qkbWvtYig=,tag:Mh9DCP/nj7j5up8bq0c12w==,type:str]
+    unencrypted_regex: ^(apiVersion|metadata|kind|type)$
+    version: 3.10.2

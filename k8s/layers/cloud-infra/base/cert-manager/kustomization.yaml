@@ -1,0 +1,90 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+helmCharts:
+  - name: cert-manager
+    repo: https://charts.jetstack.io
+    releaseName: cert-manager
+    version: v1.18.2
+    namespace: cert-manager
+    valuesInline:
+      installCRDs: true
+      serviceAccount:
+        create: true
+        name: cert-manager-sa
+      prometheus:
+        enabled: true
+        servicemonitor:
+          enabled: false
+      extraArgs:
+        - --enable-certificate-owner-ref=true
+      podAnnotations:
+        signoz.io/scrape: "true"
+        signoz.io/port: "9402"
+        signoz.io/path: "/metrics"
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+  - name: step-issuer
+    repo: https://smallstep.github.io/helm-charts
+    releaseName: step-issuer
+    version: 1.9.9
+    namespace: cert-manager
+    includeCRDs: true
+    valuesInline:
+      issuer:
+        create: false
+      stepClusterIssuer:
+        create: false
+      rbac:
+        create: true
+        namespaced: true
+        secrets:
+          - step-provisioner-password
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
+        runAsNonRoot: true
+      podSecurityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+      certManager:
+        serviceAccount:
+          name: cert-manager-sa
+        namespace: cert-manager
+resources:
+  - namespace.yaml
+  - issuers.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: cert-manager
+      namespace: step-issuer
+    patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: step-issuer
+        namespace: cert-manager
+      spec:
+        template:
+          metadata:
+            annotations:
+              signoz.io/scrape: "true"
+              signoz.io/port: "8080"
+              signoz.io/path: "/metrics"
+          spec:
+            containers:
+            - name: manager
+              ports:
+              - containerPort: 8080
+                name: metrics
+                protocol: TCP

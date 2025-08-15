@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+#MISE description="Render the kubernetes manifests that would be deployed"
+
+#USAGE flag "--environment <environment>" help="Deployment environment" {
+#USAGE   choices "dev" "preprod" "prod"
+#USAGE }
+#USAGE flag "--provider <provider>" help="Cloud provider (required: vultr or ovh)" {
+#USAGE   choices "vultr" "ovh"
+#USAGE }
+#USAGE flag "--context <kubectl_context>" help="kubectl context to use (overrides current context)" {
+#USAGE }
+
+# shellcheck source=_common.sh
+source "$(dirname "$0")/_common.sh"
+parse_deploy_args "$@"
+ensure_ksops_plugin
+
+run_kustomize_build "${usage_environment:?}"

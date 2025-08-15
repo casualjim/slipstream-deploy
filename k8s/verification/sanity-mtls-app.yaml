@@ -1,0 +1,186 @@
+# Internal mTLS (server requires client cert from ingress) + public TLS at edge
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sanity-mtls-internal
+  namespace: default
+spec:
+  secretName: sanity-mtls-internal-tls
+  issuerRef:
+    name: step-cluster-issuer
+    kind: StepClusterIssuer
+    group: certmanager.step.sm
+  commonName: sanity-mtls.default.svc.cluster.local
+  dnsNames:
+    - sanity-mtls.default.svc
+    - sanity-mtls.default.svc.cluster.local
+  duration: 720h
+  renewBefore: 240h
+  privateKey:
+    algorithm: Ed25519
+  usages:
+    - server auth
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sanity-mtls-nginx-conf
+  namespace: default
+data:
+  default.conf: |
+    server {
+      listen 8443 ssl;
+      server_name _;
+      ssl_certificate /etc/nginx/tls/tls.crt;
+      ssl_certificate_key /etc/nginx/tls/tls.key;
+      # Trust Step CA for client verification
+      ssl_client_certificate /etc/nginx/ca/ca.pem;
+      ssl_verify_depth 2;
+      # Request client cert but don't hard-fail at TLS layer; enforce per-location
+      ssl_verify_client optional;
+
+      # Health without client cert
+      location = /healthz {
+        return 200 'ok';
+      }
+      # Enforce mTLS for app traffic
+      location / {
+        # Require a valid client cert for app traffic
+        if ($ssl_client_verify != SUCCESS) { return 403; }
+        return 200 'Hello from sanity-mtls with mutual TLS!';
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sanity-mtls
+  namespace: default
+  labels:
+    app: sanity-mtls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sanity-mtls
+  template:
+    metadata:
+      labels:
+        app: sanity-mtls
+    spec:
+      securityContext:
+        runAsNonRoot: false
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+      containers:
+        - name: nginx
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 8443
+          volumeMounts:
+            - name: tls
+              mountPath: /etc/nginx/tls
+              readOnly: true
+            - name: ca
+              mountPath: /etc/nginx/ca
+              readOnly: true
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+            - name: cache
+              mountPath: /var/cache/nginx
+            - name: nginx-pid
+              mountPath: /var/run
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
+          command: ["nginx"]
+          args: ["-g", "daemon off;"]
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /healthz
+              port: 8443
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /healthz
+              port: 8443
+            initialDelaySeconds: 2
+            periodSeconds: 5
+      volumes:
+        - name: tls
+          secret:
+            secretName: sanity-mtls-internal-tls
+        - name: ca
+          secret:
+            # Provided by dev secrets generator (default namespace), key: ca.pem
+            secretName: step-root-ca-pem
+        - name: nginx-conf
+          configMap:
+            name: sanity-mtls-nginx-conf
+        - name: cache
+          emptyDir: {}
+        - name: nginx-pid
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sanity-mtls
+  namespace: default
+  labels:
+    app: sanity-mtls
+spec:
+  selector:
+    app: sanity-mtls
+  ports:
+    - name: https
+      port: 443
+      targetPort: 8443
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sanity-mtls
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    # Upstream requires HTTPS with client cert; verify upstream server with Step CA
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-ssl-secret: ingress/ingress-upstream-client
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "on"
+    nginx.ingress.kubernetes.io/proxy-ssl-verify-depth: "2"
+    nginx.ingress.kubernetes.io/proxy-ssl-trusted-ca: "ingress/ingress-upstream-root-ca"
+    nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
+    nginx.ingress.kubernetes.io/proxy-ssl-name: "sanity-mtls.default.svc.cluster.local"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sanity-mtls.dev.knub.ai
+      secretName: sanity-mtls-public-tls
+  rules:
+    - host: sanity-mtls.dev.knub.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sanity-mtls
+                port:
+                  number: 443

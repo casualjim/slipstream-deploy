@@ -1,0 +1,52 @@
+# Node modules
+node_modules/
+# Build output
+dist/
+# TypeScript output
+*.js
+*.js.map
+# Environment files
+.env
+# IDE files
+.vscode/
+# NPM packages
+package-lock.json
+/logs
+.claude/*.local.*
+/pki-backup-*
+*.pem
+*.crt
+*.key
+*-report.json
+
+# OpenTofu
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# Backend config (contains endpoints / possibly creds)
+**/backend.hcl
+
+# Helm / Kustomize downloaded charts & caches
+# Per-directory 'charts' folders created by kustomize helmCharts plugin
+**/charts/
+# Common helm cache / repository dirs (local use)
+.helm/
+.helm-cache/
+.helm/repository/
+**/.chartcache/
+# Any chart tarballs fetched locally
+*.tgz
+
+
+# Sensitive docs (keep local, never commit)
+docs/ovh-prep.md
+
+

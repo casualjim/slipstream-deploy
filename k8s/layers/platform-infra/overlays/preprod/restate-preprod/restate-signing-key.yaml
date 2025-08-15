@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+    restate-signing.key: ENC[AES256_GCM,data:QB/NrLX6CcdjOLmOy7/DQT6FLqUpTrDAYrvcVNpysmsSFCjKMK9CjPwW1f1uPw0MY/AGCEey9cOqohAU03/llvagzO7wFUT7q65A5V5N5h98uj7HSX7sCSQwEMXFV20LKD77WOn/BjfZmYTphFSooympmLxykzPRd+wHyaLcvad2mTVGVDVjdtCnPp8h4jXhnktl5fjlFaggcfr6p99MKQ==,iv:BJpaarGaxo647O/rILy9N+RqAGIy3onT51xRM3BtbwI=,tag:Y+WndCUyCJkl+4/4tTr8mA==,type:str]
+    restate-signing.pub: ENC[AES256_GCM,data:Xu0r0+RFSSOwKw+SqRNKpHkw5tPxZApAVrcmCTB2vSWt5U7197EtEb0snYoO0iN3SPA7j57AzrRcnIIg5ywKiufE0iNV5u9iERRqQyyYVNQbWUHFAVaY7Ysf/aGfhoz9ZLJ0u+W5e2LcalMUat8XzDGuE9qZX8W5qREsNkB6ANVaDacu8qx3snZO9AWYB4NjQ+QNhX5RHWg=,iv:o64pyxpRanOMiVmfud3a+Lg4wciWElMpHxvg80/X+tc=,tag:mQxees9yspmEnCOnIM4/Bg==,type:str]
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: restate-signing-key
+  namespace: restate-preprod
+sops:
+    kms:
+        - arn: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+          created_at: "2025-08-12T04:15:48Z"
+          enc: AQICAHjRcKNsvMMo3eengKwHXr11uHUOJURd2hmGOYkhaWgSygFTipphR/1DBE0+95aV/fVgAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMUJruHTdQ9+SCmDNtAgEQgDuFWA8KUxDjQUpHsbAYP136adFYCJCKaYkoQ8zFWKA+Jnkylezt615nv7Zcjucr4mb2JxunDfWyJCYYiQ==
+          aws_profile: ""
+    lastmodified: "2025-08-12T04:15:48Z"
+    mac: ENC[AES256_GCM,data:W8t3PcDjnf72GmuzjFojbVqDXFWuEvfgRzWyMHuKCgUyZtBFrr8vNaKxxZGSxK9f8j6DusgxFmCTfWtiNe0lr/paJGU+9tb+wRBBgpbL6fjehQPs5ThvcIQGpjyVwJ3Q7dRge+AUX790rLgxvIgp/DUnmWAoLx4cTSE2TmA+WoY=,iv:he1flpygS+AQeoDf1gcmhRNId+MnZG87ftWMOBOHYe0=,tag:z7d1ReCFcMhZG/cWpDdn6w==,type:str]
+    unencrypted_regex: ^(apiVersion|metadata|kind|type)$
+    version: 3.10.2

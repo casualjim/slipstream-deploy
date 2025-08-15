@@ -1,0 +1,26 @@
+apiVersion: k8s.wasmcloud.dev/v1alpha1
+kind: WasmCloudHostConfig
+metadata:
+  name: wasmcloud-host
+  namespace: platform
+spec:
+  secretName: nats-host-creds
+  hostReplicas: 1
+  lattice: default
+  version: 1.0.4
+  natsAddress: nats://nats.platform.svc.cluster.local
+  natsClientPort: 4222
+  natsLeafnodePort: 7422
+  jetstreamDomain: default
+  logLevel: INFO
+  enableStructuredLogging: true
+  certificates:
+    authorities:
+      - name: platform-ca
+        secret:
+          secretName: step-root-ca-pem-platform
+          items:
+            - key: ca.pem
+              path: ca.pem
+  schedulingOptions:
+    daemonset: true

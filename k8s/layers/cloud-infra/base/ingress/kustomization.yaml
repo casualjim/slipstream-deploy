@@ -1,0 +1,97 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+helmCharts:
+  - name: ingress-nginx
+    repo: https://kubernetes.github.io/ingress-nginx
+    releaseName: ingress-nginx
+    version: 4.11.3
+    namespace: ingress
+    valuesInline:
+      controller:
+        ingressClass: nginx
+        ingressClassResource:
+          name: nginx
+          default: true
+          controllerValue: k8s.io/ingress-nginx
+        service:
+          type: LoadBalancer
+          externalTrafficPolicy: Local
+        extraArgs:
+          enable-ssl-chain-completion: "false"
+        podSecurityContext:
+          runAsNonRoot: true
+        containerSecurityContext:
+          runAsNonRoot: true
+          runAsUser: 101
+          runAsGroup: 101
+          allowPrivilegeEscalation: true
+          capabilities:
+            drop: ["ALL"]
+            add: ["NET_BIND_SERVICE"]
+        podAnnotations:
+          signoz.io/scrape: "true"
+          signoz.io/port: "10254"
+          signoz.io/path: "/metrics"
+        admissionWebhooks:
+          enabled: true,
+          patch:
+            enabled: true
+            serviceAccount:
+              create: true
+              name: ""
+        metrics:
+          enabled: true
+      defaultBackend:
+        enabled: true
+        image:
+          registry: registry.k8s.io
+          image: defaultbackend-amd64
+          tag: "1.5"
+        podSecurityContext:
+          runAsNonRoot: true
+        containerSecurityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
+  - name: external-dns
+    repo: https://kubernetes-sigs.github.io/external-dns/
+    releaseName: external-dns
+    version: 1.14.4
+    namespace: ingress
+    valuesInline:
+      provider:
+        name: cloudflare
+      sources:
+        - ingress
+      extraArgs:
+        - --txt-owner-id=slipstream
+      env:
+        - name: CF_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-api-token
+              key: token
+      metrics:
+        enabled: true
+      podAnnotations:
+        signoz.io/scrape: "true"
+        signoz.io/port: "7979"
+        signoz.io/path: "/metrics"
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+resources:
+  - namespace.yaml

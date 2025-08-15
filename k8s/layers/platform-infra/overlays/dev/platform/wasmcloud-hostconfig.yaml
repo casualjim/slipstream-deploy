@@ -1,0 +1,49 @@
+apiVersion: k8s.wasmcloud.dev/v1alpha1
+kind: WasmCloudHostConfig
+metadata:
+  name: wasmcloud-host
+  namespace: platform
+spec:
+  # reference the Secret with NATS creds that already exists in platform
+  secretName: nats-host-creds
+  hostReplicas: 1
+  lattice: default
+  version: 1.0.4
+  # nats address points at existing nats service in platform namespace
+  natsAddress: nats://nats.platform.svc.cluster.local
+  natsClientPort: 4222
+  natsLeafnodePort: 7422
+  jetstreamDomain: default
+  logLevel: INFO
+  enableStructuredLogging: true
+  certificates:
+    authorities:
+      - name: platform-ca
+        secret:
+          secretName: step-root-ca-pem
+          items:
+            - key: ca.pem
+              path: ca.pem
+  # Optional: run as DaemonSet across nodes
+  schedulingOptions:
+    daemonset: true
+    # Mount platform CA so sidecar/host can trust upstream NATS
+    podTemplateAdditions:
+      volumes:
+        - name: platform-ca
+          secret:
+            secretName: step-root-ca-pem
+            items:
+              - key: ca.pem
+                path: ca.pem
+    containerTemplateAdditions:
+      nats:
+        volumeMounts:
+          - name: platform-ca
+            mountPath: /etc/ssl/platform-ca
+            readOnly: true
+      wasmcloud:
+        volumeMounts:
+          - name: platform-ca
+            mountPath: /etc/ssl/platform-ca
+            readOnly: true

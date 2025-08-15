@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/vultr
+
+labels:
+  - pairs:
+      env: dev
+
+patches:
+  - path: set-default-storageclass.yaml
+

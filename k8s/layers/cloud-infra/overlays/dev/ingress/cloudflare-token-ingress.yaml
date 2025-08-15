@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: cloudflare-api-token
+    namespace: ingress
+stringData:
+    token: ENC[AES256_GCM,data:JJlnOBaVpN4nfmrevPrzPfvK6cGhnqS5B2oHEO3MCGdVX7eunBPduw==,iv:J1u80Pr2FMAhDHpzX+jZbyZocc9bz33HS/iIOc/kQyQ=,tag:+np5uRkZ/Wr1akk5HJD6Jw==,type:str]
+sops:
+    kms:
+        - arn: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+          created_at: "2025-08-11T22:40:29Z"
+          enc: AQICAHjRcKNsvMMo3eengKwHXr11uHUOJURd2hmGOYkhaWgSygGf5Pe7IqO91hDaqu8v0qx4AAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMeQY/boRV+DUtOvxxAgEQgDvihg0/oIt29wBuWx/8Ow2aelDQClmle4fLh74zUitDNfssiv+8DW9ycpiddCxlPNtMnOKntsJFu1XGbg==
+          aws_profile: ""
+    lastmodified: "2025-08-11T22:40:29Z"
+    mac: ENC[AES256_GCM,data:wVFFrGcCRgevDyGel/vBrRpVhuoawB/1WJ/Og4hMAtTXHjnW8sm1CDju9psEwoYXczO0lZBioFJRerAWc5ZNHjv8iBHsXwJIqURHSJPaWgKxzO8P8S5Z+24c+tbteOE27HpZNX8eNHh7eBedvULOrcJqPCb4f1T6WVXRGKjiOvg=,iv:/NxbEI/ZJwJgXtFtG9Tmn60XEfXdfDjaAbmfQQe1iVo=,tag:s/215KflBueH+9C7A+rlsw==,type:str]
+    unencrypted_regex: ^(apiVersion|metadata|kind|type)$
+    version: 3.10.2

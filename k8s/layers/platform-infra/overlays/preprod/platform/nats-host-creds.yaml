@@ -1,0 +1,18 @@
+apiVersion: v1
+data:
+    nats.creds: ENC[AES256_GCM,data:wE+CPQOddKpP8lZBqQsid0b4VnvdWCvAxlul9aenPnf3TL/xyx+mUGbcJtVxTh6wzMGEKEtArwXywckTjNlDuvVlsx48o/4lE+tPuPoh88xaEi/j8n5UY10GCES4OKHUmxTMjhItm9vQjVvjKI1b9bCSRH6eB8UytDwG5wBPtngEQnxtSXOGlQUVAXbI9LZsI7Q71+CAoBtnDAU4JEIRLi2UICxLr6CFzsy3nKGMxuiIMdmiaj5YgUqRrWvVWD1IWD/7GIyIoHttAviolcYjWFiPe7kSQ4Eqz93tAhMFwSLY8Gby8S+3ZbtgH0L7sBMY9qGs6M4m6VCDz+0YHOlyEVMxPdCfRPXn+T982NKVNL3yU5N5xWz9OjWSJGGurK2XQ8IG3evO59+VaIiRsrsYxr85kbYAxnjhvgOpECvKxNy6pgbEjp1uON7Ix0WazO/Ug80AjouZ9ysdnaUlGMLs2tE4IsmUHz12JOelenLOKbfma2fLC7C7P+ybgxTkyyFvv0YwnZpf/+wdeUMUnCUIg+ywLLDbVF/kFEG5Dj/bQrgDGyadXdURkKSER196wIfaU0x+u2MpCWUOxtnQQC3c++9M+9jBzJmC4xze9Ewua4YJ+Sd+bExOszZNrMrPfXUcCVnaky9Lbd0zfWU1bi9i2t/daR8aVdaPcv5NaOx/zWfQstzeg33qS3COr+xOFPd29cfNcTAzVUH+GPQis54YivgNIwAikrGADkT3XGWfDQfq72RgpZhMaTuactjRsAlQvCj1ivBipWRXbKFx3ENGrqoPck7511r6NX584LTmcuMsV+58voxkoNtZc38y0OnLa3YOJE4954P3vi4a5UNsCF77hRLHMGeyVSnlTrY/S0hWazJdCKzVxBk93zPa4v4BnvEgAc2xEU8yzs6VvVvl8UNJ2KBFK9HcUTNqpMyeG8oHaO60MwMzAoNiydk0TsW9Czvfz/GSNES/1asZsgHev18vUa3crkgw5Zetyeq6zW77ucHJuPTwfkNNx+O27oRidgkCHOr/n5h5CliSXbTLT3cWB6RHzFMyOHrxGNy+/+S/uZyeNJFBteortMJybqHHH/7KrIK772L7Sxx3RSZeEgtr+xJCk7KCeC/+SqqJiZlsbnbtOki4kIsR4i5xn6ZE8F2cMV6t/vQutXnQ50m3r+q83/lICTKWauMZ1b07vgw44ECsYWZt10eAbMx1dAybMPFRg6Eh5dCfH0L0ggBLCzXXRr1Ow3fIyb/HVDnlhPje2o8/+9oTALwmAS9v4MuLlW6qs8S2ebQDyNOp0IlE20LQk8LPCoGp9rhGhRn4JWvUM7tuwQB/16wzeDDI/1ASI7iDNTsppzfB9TXQ+DUkXfB6x2fSF6dzTCV8S51rOe5uKGPd8EX3lvdmHhyUm9hts9Ee5W8SqYeyKD5rpDLP9h39eycB4PuL5mh9cmRfZffpYPzVAhZ+6RUrglarre6H/6RHyUVpMwti0ttoGXZ4zKaSeWivVlLQH5wMU6HCdjiIMUnupo9QhADQQ19yY38hPsQkTK3ngE4uEDZ1TvfSUhaTswHfuJ+ghV9YjwHrae0hdj67Mf8WcXFKlVA530lisOxxMXdgkLntCFtf3SkxBOMesk10/DnLuBAh5y5V6cbw4/8nXFGdOHx4DnKGoTkacDxyHue9LL2XQC45ayaieQMmytSdQ8J4PqghUZfSgZYGqzHF0JES8CZAKFB1D4VZB0QqcA==,iv:axawdDwZf6k6f8HcHHEtmIfqoi3wNvwXySE4DV4AYA8=,tag:n6RNo6F2snohN0gOOmOxjA==,type:str]
+kind: Secret
+metadata:
+    creationTimestamp: null
+    name: nats-host-creds
+    namespace: platform
+sops:
+    kms:
+        - arn: arn:aws:kms:us-west-2:880087769380:key/55535a25-24ba-401a-9194-06bf446862d8
+          created_at: "2025-08-13T06:56:29Z"
+          enc: AQICAHjRcKNsvMMo3eengKwHXr11uHUOJURd2hmGOYkhaWgSygEplPbfWjRhY5LngKCjrQ1LAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM5lqxooTCP0UmHOFQAgEQgDuopUF6GWdT4qzDjvuZxGg1QodGpS0L3w4zlMBcIRrlg7+wu59q1pAe5RshHWAuuh0ryQWLIadfvcWNqg==
+          aws_profile: ""
+    lastmodified: "2025-08-13T06:56:30Z"
+    mac: ENC[AES256_GCM,data:WykDfwx687vHHYnSxa2/PmGG7VDrPvLx2/9X9gtgt8z4cN0ZFtsw8/yWv0TM3ofKCvMpGk4CgZyujDx/rNAdjjpG0YNg5R+zWyzJvB1BEdzGMkLDIEX3VSR0ZAhPGOXGzyklA43wOp5VZLL31agWrZugS+gHnRibyh4L1rsqNzY=,iv:UjzGiDQy/5QkNa3rCD+rd68zVoISoGmjAM5fP/1CtVE=,tag:6JAu6tXD2HFnepz+GVeZ7A==,type:str]
+    unencrypted_regex: ^(apiVersion|metadata|kind|type)$
+    version: 3.10.2

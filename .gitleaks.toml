@@ -1,0 +1,35 @@
+title = "slipstream-deploy streamlined secret scanning rules"
+
+[allowlist]
+description = "Allow common non-source or generated content + encrypted markers"
+paths = [
+  "docs/",
+  "sample-app.yaml",
+  "bun.lock",
+  "node_modules/"
+]
+regexes = [
+  "^.*\\.md$",
+  "^.*\\.toml$",
+  "^.*\\.json$",
+  "^.*\\.lock$",
+  "AAABA[A-Za-z0-9+/=]{10,}" # Pulumi encrypted secret marker ciphertext
+]
+
+[[rules]]
+id = "pem_private_key"
+description = "PEM private key header"
+regex = '''-----BEGIN (?:EC|RSA|ED25519|OPENSSH) PRIVATE KEY-----'''
+tags = ["pem","private_key"]
+
+[[rules]]
+id = "cloudflare_token_assignment"
+description = "Likely Cloudflare token assignment (restrict to explicit variable names)"
+regex = '''(?i)cloudflare(?:Api|_api|Api)?Token\s*(?:=|:)\s*['"][A-Za-z0-9-_]{30,}['"]'''
+tags = ["cloudflare","token"]
+
+[[rules]]
+id = "step_provisioner_password_literal"
+description = "Step provisioner password hardcoded (explicit var names only)"
+regex = '''(?i)provisioner(?:Kid|Password)?Password\s*(?:=|:)\s*['"][A-Za-z0-9!@#$%^&*()_+=\-]{16,}['"]'''
+tags = ["step","password"]
