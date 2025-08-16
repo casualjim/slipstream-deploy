@@ -8,5 +8,6 @@ terraform {
     kubernetes = { source = "hashicorp/kubernetes" }
     helm = { source = "hashicorp/helm" }
     b2 = { source = "Backblaze/b2" }
+    ovh = { source = "ovh/ovh" }
   }
 }

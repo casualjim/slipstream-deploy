@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+#MISE description="Run OpenTofu plan with a chosen var-file or derive one from provider+environment"
+
+#USAGE flag "--environment <environment>" help="Deployment environment" {
+#USAGE   choices "dev" "preprod" "prod"
+#USAGE }
+#USAGE flag "--provider <provider>" help="Cloud provider (required: vultr or ovh)" {
+#USAGE   choices "vultr" "ovh"
+#USAGE }
+#USAGE flag "--vars-file <path>" help="Optional path to a .tfvars file to pass to tofu" {
+#USAGE }
+
+if [ -z "${usage_provider:-}" ]; then
+  echo "Provider is required" >&2
+  exit 1
+fi
+if [ -z "${usage_environment:-}" ]; then
+  echo "Environment is required" >&2
+  exit 1
+fi
+
+if [ -n "${usage_vars_file:-}" ]; then
+  vars_file="${usage_vars_file}"
+else
+  vars_file="tofu/infra/vars/${usage_provider}-${usage_environment}.tfvars"
+fi
+
+if [ ! -f "$vars_file" ]; then
+  echo "Var file not found: $vars_file" >&2
+  exit 2
+fi
+
+# Compute absolute path for the var file (works on macOS and Linux)
+vars_file_abspath="$(cd "$(dirname "$vars_file")" >/dev/null 2>&1 && pwd)/$(basename "$vars_file")"
+
+cd tofu/infra
+
+echo "Running: tofu plan -var-file=$vars_file_abspath"
+exec tofu plan -var-file="$vars_file_abspath"

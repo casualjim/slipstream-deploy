@@ -3,16 +3,19 @@
 ## Purpose
 
 This OpenTofu root (`tofu/infra`) provisions the minimal cloud resources
-required to bootstrap a Kubernetes cluster on Vultr and exposes a small set
+required to bootstrap a Kubernetes cluster on Vultr or OVH and exposes a small set
 of sensitive outputs used by operators during cluster bootstrapping.
 
 ## What it creates
 
-- Vultr VPC (`vultr_vpc`)
-- Vultr managed Kubernetes cluster (`vultr_kubernetes`)
-- Baseline firewall rules to allow SSH/HTTP/HTTPS (IPv4 and IPv6)
-- Reads SOPS‑encrypted secrets from `tofu/infra/secrets` and exposes
-	operator‑focused outputs
+- On Vultr (cloud=vultr):
+	- Vultr VPC (`vultr_vpc`)
+	- Vultr managed Kubernetes cluster (`vultr_kubernetes`)
+	- Baseline firewall rules to allow SSH/HTTP/HTTPS (IPv4 and IPv6)
+- On OVH (cloud=ovh):
+	- OVH managed Kubernetes cluster (`ovh_cloud_project_kube`)
+	- Node pool (`ovh_cloud_project_kube_nodepool`)
+- Reads SOPS‑encrypted secrets from `tofu/infra/secrets` and exposes operator‑focused outputs
 
 ## Important constraints
 
@@ -29,6 +32,24 @@ of sensitive outputs used by operators during cluster bootstrapping.
 	appropriate decryption keys (AWS KMS or another key service depending on
 	your `.sops.yaml`). See `.sops.yaml` and `docs/operations/secrets.md` for guidance.
 
+## Configuration
+
+Select the target cloud with the `cloud` variable (`vultr` by default). For OVH,
+provide credentials via environment variables or SOPS secrets:
+
+- Env vars: `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET`, `OVH_CONSUMER_KEY`
+- Or SOPS keys in `secrets/base.yaml`: `ovh.applicationKey`, `ovh.applicationSecret`, `ovh.consumerKey`
+
+Key OVH variables (set these for your environment; examples are placeholders):
+
+- `ovh_project_id` (e.g., <YOUR_OVH_PROJECT_ID>)
+- `ovh_region` (e.g., <REGION>)
+- `ovh_k8s_version` (e.g., <K8S_VERSION>)
+- `ovh_cluster_name` (e.g., <CLUSTER_NAME>)
+- Node pool: `ovh_node_flavor` (e.g., <FLAVOR>), `ovh_nodepool_size` (e.g., <SIZE>), autoscale min/max (e.g., <MIN>/<MAX>)
+
+Optional: `ovh_create_buckets` and `ovh_bucket_region` to plan for S3 buckets (creation may be managed externally).
+
 ## Outputs
 
 The infra root exports several outputs intended for operator convenience. They
@@ -37,18 +58,19 @@ platform stage is driven from the `k8s/` manifests.
 
 Key outputs (sensitive where noted):
 
-- `kubeconfig_raw` / `kubeconfig_decoded` (sensitive) — base64 / decoded
-	kubeconfig for the Vultr cluster
-- `cloudflare_api_token` (sensitive) — Cloudflare token for external‑dns / ACME
-- `step_ca_url`, `step_root_ca_pem`, `step_provisioner_kid`,
-	`step_provisioner_password` (sensitive) — Smallstep CA provisioning material
-	consumed by cert‑manager Step ClusterIssuer
-- `nats_*_creds_b64` (sensitive) — encoded NATS credentials used by manifests
+- `kubeconfig_decoded` (sensitive) — decoded kubeconfig for the selected cloud
 
 ## How to apply
 
 1) Initialize with a backend config (e.g. `backend.hcl`). The project can use an
 	 S3‑compatible backend; keep `backend.hcl` uncommitted.
+
+If you lost your `backend.hcl`, copy `backend.hcl.example` and fill in placeholders:
+
+```sh
+cp backend.hcl.example backend.hcl
+# edit backend.hcl to set bucket, endpoint, region, and leave credentials in env
+```
 
 ```sh
 cd tofu/infra
@@ -80,3 +102,4 @@ tofu workspace select dev
 - `tofu/infra/variables.tf`
 - `tofu/infra/secrets/{base.yaml,dev.yaml}`
 - `tofu/infra/modules/vultr/main.tf`
+- `tofu/infra/modules/ovh/main.tf`

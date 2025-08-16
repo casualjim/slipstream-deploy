@@ -1,0 +1,12 @@
+# Copy this file to backend.hcl and fill in the placeholders.
+# Do not commit backend.hcl.
+
+# S3-compatible backend (e.g., OVHcloud Object Storage, MinIO)
+# Reference (syntax and options):
+# - Terraform S3 backend docs: https://developer.hashicorp.com/terraform/language/settings/backends/s3
+# OpenTofu supports the same backend syntax.
+
+bucket  = "<STATE_BUCKET_NAME>"           # required
+key     = "slipstream/infra/terraform.tfstate"  # path/key within the bucket
+region  = "<REGION>"                       # logical region for the backend
+endpoint = "<S3_ENDPOINT>"                 # e.g., https://s3.<region>.<provider-domain>

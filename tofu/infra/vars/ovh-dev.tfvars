@@ -1,0 +1,10 @@
+ovh_cluster_name = "slipstream-dev"
+ovh_project_id = "195e7303c1744854a0afdd4f4efc35de"
+cloud = "ovh"
+ovh_vrack = true
+vrack_vlan_id = 2100
+private_subnet_cidr = "10.1.0.0/16"
+private_subnet_start = "10.1.0.2"
+private_subnet_end = "10.1.255.254"
+ovh_k8s_version = "1.33"
+ovh_node_flavor = "b3-8"
