@@ -40,10 +40,22 @@ for provider in vultr ovh; do
   mise deploy:tofu:apply --provider "$provider" --environment "dev"
   mise deploy:tofu:kubeconfig --provider "$provider" --environment "dev"
 done
+
 mise merge-kubeconfigs
+
 for ctx in $(kubectl config get-contexts -o name); do
-  mise deploy:promote --provider "$provider" --environment "dev" --context "$ctx"
+  # We need to apply this at least 3 times to get all the manifests accepted in the cluster.
+  for _ in {1..3}; do
+    mise deploy:promote --provider "$provider" --environment "dev" --context "$ctx"
+    sleep 30s
+  done
+
+  # overwrite the wasmcloud host config, with a mtls capable one
+  kubectl apply -f /Users/ivan/github/casualjim/slipstream-deploy/k8s/layers/platform-infra/overlays/dev/platform/nats-leaf-config.yaml
+  kubectl -n platform rollout restart ds wasmcloud-host
+
 done
+
 ```
 
 

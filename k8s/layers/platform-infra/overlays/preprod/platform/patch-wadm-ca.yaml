@@ -1,0 +1,15 @@
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: platform-ca
+    secret:
+      secretName: step-root-ca-pem
+      items:
+        - key: ca.pem
+          path: ca.pem
+- op: add
+  path: /spec/template/spec/containers/0/volumeMounts/-
+  value:
+    name: platform-ca
+    mountPath: /etc/ssl/platform-ca
+    readOnly: true

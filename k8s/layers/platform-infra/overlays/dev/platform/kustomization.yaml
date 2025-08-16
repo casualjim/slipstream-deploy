@@ -1,5 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: platform
 resources:
   - ../../../base/platform
   - certificate.yaml
@@ -187,4 +188,38 @@ helmCharts:
             limits:
               cpu: "500m"
               memory: "768Mi"
+
+  - name: wadm
+    repo: oci://ghcr.io/wasmcloud/charts
+    releaseName: wadm
+    version: 0.2.10
+    namespace: platform
+    valuesInline:
+      wadm:
+        replicas: 1
+        config:
+          apiPrefix: "default"
+          nats:
+            server: "tls://nats.platform.svc:4222"
+            jetstreamDomain: "default"
+            tlsCaFile: "/etc/ssl/platform-ca/ca.pem"
+            creds:
+              secretName: "nats-wadm-creds"
+              key: "wadm.creds"
+          structuredLogging: true
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
+
+patches:
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: wadm
+    path: patch-wadm-ca.yaml
 
