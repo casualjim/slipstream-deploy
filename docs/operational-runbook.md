@@ -31,6 +31,23 @@ Fetch kubeconfig
 
 - Alternatively, use `vultr kubernetes list --output json` to list clusters and `vultr kubernetes kubeconfig <id>` to obtain the kubeconfig manually.
 
+Deploying tofu with mise (apply → merge kubeconfigs → promote)
+
+- The repo uses mise for build/deploy tasks. To provision clusters (OpenTofu) and promote platform manifests across providers the short pattern is:
+
+```sh
+for provider in vultr ovh; do
+  mise deploy:tofu:apply --provider "$provider" --environment "dev"
+  mise deploy:tofu:kubeconfig --provider "$provider" --environment "dev"
+done
+mise merge-kubeconfigs
+for ctx in $(kubectl config get-contexts -o name); do
+  mise deploy:promote --provider "$provider" --environment "dev" --context "$ctx"
+done
+```
+
+
+
 Deploy platform (kustomize)
 
 - Render manifests:
