@@ -1,0 +1,34 @@
+{
+  "name": "bun-hello-world",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A simple Bun-based JSON API server",
+  "main": "./src/server.ts",
+  "scripts": {
+    "start": "bun --bun src/server.ts",
+    "dev": "bun --watch src/server.ts",
+    "test": "bun test",
+    "clean": "rm -rf node_modules bun.lockb"
+  },
+  "keywords": [
+    "bun",
+    "typescript",
+    "api",
+    "server",
+    "json",
+    "docker"
+  ],
+  "author": "Ivan Porto Carrero",
+  "license": "MIT",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "hono": "^4.9.2"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.0.0"
+  },
+  "trustedDependencies": []
+}
