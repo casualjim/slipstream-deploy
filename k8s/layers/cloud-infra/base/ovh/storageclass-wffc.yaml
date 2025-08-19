@@ -1,7 +1,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: ovh-block-storage-wffc
+  name: block-storage-wffc
 provisioner: cinder.csi.openstack.org
 parameters:
   availability: nova

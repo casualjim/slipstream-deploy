@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: restate-hello
+  labels:
+    # Allow the Restate cluster "restate-dev" to call services in this namespace
+    # Ref: https://github.com/restatedev/restate-operator#restatecluster
+    allow.restate.dev/restate-dev: "true"
+---
+apiVersion: restate.dev/v1beta1
+kind: RestateDeployment
+metadata:
+  name: hello-world
+  namespace: restate-hello
+spec:
+  replicas: 1
+  restate:
+    register:
+      # Register against the RestateCluster named "restate-dev" in this cluster
+      cluster: restate-dev
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: app
+          # Public example services image (TypeScript SDK) maintained by Restate
+          # Ref: https://github.com/restatedev/sdk-typescript/pkgs/container/test-services-node
+          image: ghcr.io/restatedev/test-services-node:main
+          ports:
+            - name: restate
+              containerPort: 9080
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"

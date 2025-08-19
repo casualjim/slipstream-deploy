@@ -6,6 +6,7 @@ resources:
   - certificate.yaml
   - nats-resolver-auth.yaml
   - ../../../base/wasmcloud-operator
+  - nats-leaf-config.yaml
   - wasmcloud-hostconfig.yaml
 
 generators:
