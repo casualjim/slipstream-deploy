@@ -29,6 +29,38 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            # Ensure the operator trusts the internal platform CA when dialing NATS/wadm over TLS
+            - name: WADM_NATS_TLS_CA_FILE
+              value: /etc/ssl/platform-ca/ca.pem
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/platform-ca/ca.pem
+            # Point operator to the in-cluster NATS with TLS and supply creds to talk to wadm API
+            - name: WADM_NATS_SERVER
+              value: tls://nats.platform.svc:4222
+            - name: WADM_NATS_CREDS_FILE
+              value: /etc/nats-creds/wadm/wadm.creds
+            - name: WADM_JETSTREAM_DOMAIN
+              value: default
+          volumeMounts:
+            - name: platform-ca
+              mountPath: /etc/ssl/platform-ca
+              readOnly: true
+            - name: nats-wadm-creds
+              mountPath: /etc/nats-creds/wadm
+              readOnly: true
+      volumes:
+        - name: platform-ca
+          secret:
+            secretName: step-root-ca-pem
+            items:
+              - key: ca.pem
+                path: ca.pem
+        - name: nats-wadm-creds
+          secret:
+            secretName: nats-wadm-creds
+            items:
+              - key: wadm.creds
+                path: wadm.creds
 ---
 apiVersion: v1
 kind: ServiceAccount

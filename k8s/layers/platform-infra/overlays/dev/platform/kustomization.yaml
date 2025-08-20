@@ -199,7 +199,6 @@ helmCharts:
       wadm:
         replicas: 1
         config:
-          apiPrefix: "default"
           nats:
             server: "tls://nats.platform.svc:4222"
             jetstreamDomain: "default"
